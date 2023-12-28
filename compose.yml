@@ -11,7 +11,8 @@ services:
     env_file:
       - .env
     depends_on:
-      - db
+      db: 
+        condition: service_healthy
   db:
     platform: linux/x86_64
     image: mysql:8.0.27
@@ -25,6 +26,12 @@ services:
       MYSQL_USER: user
       MYSQL_PASSWORD: password
     restart: always
+    healthcheck:   # here
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p$MYSQL_ROOT_PASSWORD"]
+      interval: 30s
+      timeout: 5s
+      retries: 6
+      start_period: 30s
   adminer:
     image: adminer:4.7.5
     restart: always

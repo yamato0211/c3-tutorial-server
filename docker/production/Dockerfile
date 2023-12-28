@@ -3,7 +3,7 @@ ARG ALPINE_VERSION=3.18
 
 FROM golang:${GO_VERSION}-alpine${ALPINE_VERSION} as go-builder
 
-WORKDIR /go/src/plesio-server
+WORKDIR /go/src/c3-tutorial
 
 COPY go.mod .
 COPY go.sum .
@@ -15,10 +15,10 @@ RUN go build -o api cmd/main.go
 
 FROM alpine:${ALPINE_VERSION}
 
-WORKDIR /usr/src/plesio-server
+WORKDIR /usr/src/c3-tutorial
 
-COPY --from=go-builder /go/src/plesio-server/api api
-COPY --from=go-builder /go/src/plesio-server/api .env
-RUN chmod +x "/usr/src/plesio-server/api"
+COPY --from=go-builder /go/src/c3-tutorial/api api
+COPY --from=go-builder /go/src/c3-tutorial/api .env
+RUN chmod +x "/usr/src/c3-tutorial/api"
 
-ENTRYPOINT ["/usr/src/plesio-server/api"]
+ENTRYPOINT ["/usr/src/c3-tutorial/api"]
